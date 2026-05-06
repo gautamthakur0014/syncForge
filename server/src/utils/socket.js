@@ -17,6 +17,13 @@ io.on("connection", (socket) => {
 
     socket.on("register", ()=>{});
 
+    socket.on("joinRoom", ({roomId, userName})=>{
+      socket.join(roomId);
+      console.log("room joined: ", roomId,  userName);
+      
+      socket.to(roomId).emit("roomJoined", {member:userName});
+    });
+
 
     socket.on("disconnect", ()=>{
       console.log("socket dissconnected");
