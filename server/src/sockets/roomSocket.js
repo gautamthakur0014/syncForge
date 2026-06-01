@@ -8,24 +8,40 @@ const EVENTS = require("../constants/socketEvent");
 
 const roomSocketHandler = (io, socket) => {
   socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName }) => {
+    
+    const result = addMember(roomId, {
+      socketId: socket.id,
+      userName,
+    });
+    console.log(result);
+    
+
+    if (!result.success) {
+      socket.emit("roomError", {
+        message: "Room is full",
+        code: "ROOM_FULL",
+      });
+      return;
+    }
     socket.join(roomId);
 
     socket.data.userName = userName;
     socket.data.roomId = roomId;
+    
 
-    addMember(roomId, {
-      socketId: socket.id,
-      userName,
-    });
-
-    const members = getRoomMembers(roomId);
+    const members = getRoomMembers(roomId).map((e)=>e.userName);
+    console.log(members);
+    
 
     // send all members to everyone
-    io.to(roomId).emit(EVENTS.ROOM_MEMBERS, members);
+    // io.to(roomId).emit(EVENTS.ROOM_MEMBERS, members);
 
-    // optional event
+    // Send all members only to the newly joined user
+    socket.emit(EVENTS.ROOM_MEMBERS, members);
+
+    // Send to everyone in the room except the current user
     socket.to(roomId).emit(EVENTS.USER_JOINED, {
-      userName,
+      joinedUserName: userName,
     });
   });
 
@@ -37,7 +53,7 @@ const roomSocketHandler = (io, socket) => {
     io.to(removed.roomId).emit(EVENTS.ROOM_MEMBERS, removed.members);
 
     io.to(removed.roomId).emit(EVENTS.USER_LEFT, {
-      userName: socket.data.userName,
+      leavedUserName: socket.data.userName,
     });
   });
 };
