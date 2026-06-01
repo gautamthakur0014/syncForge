@@ -1,22 +1,30 @@
 const rooms = new Map();
-
-/* format:-
-rooms = {
-  room123: [
-    {
-      socketId,
-      userName
-    }
-  ]
-}
-*/
+const MAX_ROOM_SIZE = 4;
 
 const addMember = (roomId, member) => {
   if (!rooms.has(roomId)) {
     rooms.set(roomId, []);
   }
+  const members = rooms.get(roomId);
 
-  rooms.get(roomId).push(member);
+  //  reject if room is full
+  if (members.length >= MAX_ROOM_SIZE) {
+    return { success: false, reason: "ROOM_FULL" };
+  }
+
+  const index = members.findIndex((m) => m.socketId === member.socketId);
+
+  if (index !== -1) {
+    members[index] = member; // update instead of duplicate
+  } else {
+    members.push(member);
+  }
+
+  return {
+    success: true,
+    reason: "JOINED",
+  };
+
 };
 
 const removeMember = (socketId) => {
