@@ -1,9 +1,20 @@
 const rooms = new Map();
 const MAX_ROOM_SIZE = 4;
 
-const addMember = (roomId, member) => {
+const addMember = (roomId, member, roomState = null) => {
+
+  let role = "member";
+
   if (!rooms.has(roomId)) {
-    rooms.set(roomId, []);
+    rooms.set(roomId, {
+      members: [],
+      state: roomState || {
+        code: "",
+        lang: "javascript",
+        theme: "vs-dark",
+      },
+    });
+    role = "admin"
   }
   const members = rooms.get(roomId);
 
@@ -12,17 +23,24 @@ const addMember = (roomId, member) => {
     return { success: false, reason: "ROOM_FULL" };
   }
 
+  const newMember = {
+    ...member,
+    role,
+  };
+
   const index = members.findIndex((m) => m.socketId === member.socketId);
 
   if (index !== -1) {
-    members[index] = member; // update instead of duplicate
+    members[index] = newMember; // update instead of duplicate
   } else {
-    members.push(member);
+    members.push(newMember);
   }
 
   return {
     success: true,
     reason: "JOINED",
+    member : newMember,
+    state : roomId.state,
   };
 
 };
@@ -40,9 +58,10 @@ const removeMember = (socketId) => {
         rooms.delete(roomId);
       }
 
+      const filteredMembersNames = filteredMembers.map((e)=>(e.userName))
       return {
         roomId,
-        members: filteredMembers,
+        members: filteredMembersNames,
       };
     }
   }
@@ -54,8 +73,13 @@ const getRoomMembers = (roomId) => {
   return rooms.get(roomId) || [];
 };
 
+const getRoomState = (roomId) => {
+  return rooms.get(roomId)?.state || null;
+};
+
 module.exports = {
   addMember,
   removeMember,
   getRoomMembers,
+  getRoomState,
 };
