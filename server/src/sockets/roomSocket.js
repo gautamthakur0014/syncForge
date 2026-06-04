@@ -2,19 +2,22 @@ const {
   addMember,
   removeMember,
   getRoomMembers,
+  getRoomState,
 } = require("../managers/roomManager");
 
 const EVENTS = require("../constants/socketEvent");
 
 const roomSocketHandler = (io, socket) => {
-  socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName }) => {
-    
-    const result = addMember(roomId, {
-      socketId: socket.id,
-      userName,
-    });
+  socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName, state }) => {
+    const result = addMember(
+      roomId,
+      {
+        socketId: socket.id,
+        userName,
+      },
+      state,
+    );
     console.log(result);
-    
 
     if (!result.success) {
       socket.emit("roomError", {
@@ -27,21 +30,24 @@ const roomSocketHandler = (io, socket) => {
 
     socket.data.userName = userName;
     socket.data.roomId = roomId;
-    
 
-    const members = getRoomMembers(roomId).map((e)=>e.userName);
+    // const members = getRoomMembers(roomId).map((e)=>e.userName);
+    const members = getRoomMembers(roomId);
+    const roomState = getRoomState(roomId)
     console.log(members);
-    
 
     // send all members to everyone
     // io.to(roomId).emit(EVENTS.ROOM_MEMBERS, members);
 
     // Send all members only to the newly joined user
-    socket.emit(EVENTS.ROOM_MEMBERS, members);
+    socket.emit(EVENTS.ROOM_MEMBERS, {
+      members,
+      roomState,
+    });
 
     // Send to everyone in the room except the current user
     socket.to(roomId).emit(EVENTS.USER_JOINED, {
-      joinedUserName: userName,
+      joinedUser: result.member,
     });
   });
 
