@@ -9,6 +9,7 @@ const EVENTS = require("../constants/socketEvent");
 
 const roomSocketHandler = (io, socket) => {
   socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName, state }) => {
+    
     const result = addMember(
       roomId,
       {
@@ -17,7 +18,7 @@ const roomSocketHandler = (io, socket) => {
       },
       state,
     );
-    console.log(result);
+    // console.log(result);
 
     if (!result.success) {
       socket.emit("roomError", {
@@ -34,7 +35,7 @@ const roomSocketHandler = (io, socket) => {
     // const members = getRoomMembers(roomId).map((e)=>e.userName);
     const members = getRoomMembers(roomId);
     const roomState = getRoomState(roomId)
-    console.log(members);
+    console.log(roomState);
 
     // send all members to everyone
     // io.to(roomId).emit(EVENTS.ROOM_MEMBERS, members);
