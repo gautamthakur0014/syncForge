@@ -57,7 +57,7 @@ const roomSocketHandler = (io, socket) => {
 
     if (!removed) return;
 
-    io.to(removed.roomId).emit(EVENTS.ROOM_MEMBERS, removed.members);
+    io.to(removed.roomId).emit(EVENTS.ROOM_MEMBERS, removed);
 
     io.to(removed.roomId).emit(EVENTS.USER_LEFT, {
       leavedUserName: socket.data.userName,
