@@ -17,8 +17,6 @@ const addMember = (roomId, member, roomState = null) => {
     role = "admin"
   }
   const members = rooms.get(roomId).members;
-  
-
   //  reject if room is full
   if (members.length >= MAX_ROOM_SIZE) {
     return { success: false, reason: "ROOM_FULL" };
@@ -53,16 +51,16 @@ const removeMember = (socketId) => {
     );
 
     if (filteredMembers.length !== room.members.length) {
-      rooms.set(roomId, filteredMembers);
+        room.members = filteredMembers;
 
       if (filteredMembers.length === 0) {
         rooms.delete(roomId);
       }
 
-      const filteredMembersNames = filteredMembers.map((e)=>(e.userName))
+      // const filteredMembersNames = filteredMembers.map((e)=>(e.userName))
       return {
         roomId,
-        members: filteredMembersNames,
+        members: filteredMembers,
       };
     }
   }
@@ -71,7 +69,7 @@ const removeMember = (socketId) => {
 };
 
 const getRoomMembers = (roomId) => {
-  return rooms.get(roomId).members || [];
+  return rooms.get(roomId)?.members || [];
 };
 
 const getRoomState = (roomId) => {
