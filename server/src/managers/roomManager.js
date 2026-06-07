@@ -2,7 +2,6 @@ const rooms = new Map();
 const MAX_ROOM_SIZE = 4;
 
 const addMember = (roomId, member, roomState = null) => {
-
   let role = "member";
 
   if (!rooms.has(roomId)) {
@@ -14,7 +13,7 @@ const addMember = (roomId, member, roomState = null) => {
         theme: "vs-dark",
       },
     });
-    role = "admin"
+    role = "admin";
   }
   const members = rooms.get(roomId).members;
   //  reject if room is full
@@ -38,20 +37,24 @@ const addMember = (roomId, member, roomState = null) => {
   return {
     success: true,
     reason: "JOINED",
-    member : newMember,
+    member: newMember,
     // state : roomId.state,
   };
-
 };
 
 const removeMember = (socketId) => {
   for (const [roomId, room] of rooms.entries()) {
+    const removedMember = room.members.find(
+      (member) => member.socketId === socketId,
+    );
+    if (!removedMember) continue;
+
     const filteredMembers = room.members.filter(
       (member) => member.socketId !== socketId,
     );
 
     if (filteredMembers.length !== room.members.length) {
-        room.members = filteredMembers;
+      room.members = filteredMembers;
 
       if (filteredMembers.length === 0) {
         rooms.delete(roomId);
@@ -61,6 +64,7 @@ const removeMember = (socketId) => {
       return {
         roomId,
         members: filteredMembers,
+        removedMember,
       };
     }
   }
