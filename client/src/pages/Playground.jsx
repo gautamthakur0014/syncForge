@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
 import MonacoEditor from "../components/editor/MonacoEditor";
 import Console from "../components/Console";
-import { getSocket } from "../utils/socket";
 import ToolBar from "../components/toolbar/ToolBar";
+import { useRoomSocket } from "../hooks/socket/useRoomSocket";
+import {useCodeSync} from "../hooks/socket/useCodeSync";
 
 const Playground = () => {
-  const roomId = 1234;
-  const userName = "alex";
+  useRoomSocket();
+  useCodeSync();
   
 
 
