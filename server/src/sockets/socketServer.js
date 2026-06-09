@@ -1,5 +1,6 @@
 const socketIO = require('socket.io');
-
+const roomSocketHandler = require("./roomSocket");
+const codeSyncHandler = require('./codeSync');
 
 
 const initializeSocket = (server) => {
@@ -13,21 +14,9 @@ const io = socketIO(server, {
 
 io.on("connection", (socket) => {
     console.log("Socket connected:", socket.id);
-
-
-    socket.on("register", ()=>{});
-
-    socket.on("joinRoom", ({roomId, userName})=>{
-      socket.join(roomId);
-      console.log("room joined: ", roomId,  userName);
-      
-      socket.to(roomId).emit("roomJoined", {member:userName});
-    });
-
-
-    socket.on("disconnect", ()=>{
-      console.log("socket dissconnected");
-    });
+    
+    roomSocketHandler(io,socket);
+    codeSyncHandler(io, socket);
 });
 };
 
