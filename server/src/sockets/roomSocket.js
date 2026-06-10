@@ -18,7 +18,6 @@ const roomSocketHandler = (io, socket) => {
       },
       state,
     );
-    // console.log(result);
 
     if (!result.success) {
       socket.emit("roomError", {

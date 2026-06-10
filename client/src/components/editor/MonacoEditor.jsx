@@ -22,6 +22,7 @@ const MonacoEditor = () => {
 
 
   const emitCodeChange = throttle((code) => {
+    if(!roomId) return;
     const socket = getSocket();
     console.log(code);
     

@@ -79,10 +79,14 @@ const getRoomMembers = (roomId) => {
 const getRoomState = (roomId) => {
   return rooms.get(roomId)?.state || null;
 };
+const updateRoomState = (roomId, updatedCode) => {
+  rooms.get(roomId).state.code = updatedCode;
+}
 
 module.exports = {
   addMember,
   removeMember,
   getRoomMembers,
   getRoomState,
+  updateRoomState,
 };
