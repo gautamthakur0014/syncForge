@@ -12,9 +12,7 @@ export const useRoomSocket = () => {
 
     const handleRoomMembers = ( {members, roomState} ) => {
       // console.log(members.map((e)=>(e.userName)));
-      console.log(members);
       
-      console.log(roomState);
       editorStore.actions.setCode(roomState.code);
       editorStore.actions.setLanguage(roomState.language);
       editorStore.actions.setTheme(roomState.theme);
@@ -27,7 +25,7 @@ export const useRoomSocket = () => {
       actions.addUser(joinedUser);
     };
     const handleUserLeft = ({ leavedUserName }) => {
-      console.log(leavedUserName + "leaved");
+      console.log(leavedUserName + " leaved");
       actions.removeUser(leavedUserName);
     };
 
