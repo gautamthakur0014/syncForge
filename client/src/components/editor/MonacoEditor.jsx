@@ -1,41 +1,19 @@
 import React, { useRef } from "react";
 import Editor from "@monaco-editor/react";
 import useEditorStore from "../../store/useEditorStore";
-import useRoomStore from "../../store/useRoomStore";
-import throttle from "lodash/throttle";
-import { getSocket } from "../../utils/socket";
+import useEditorSetup from "../../hooks/editor/useEditorSetup";
+import useCursorSync from "../../hooks/editor/useCursorSync";
+
 
 
 const MonacoEditor = () => {
-
-  const code = useEditorStore((state)=>state.code);
-  const setCode = useEditorStore((state)=>state.actions.setCode);
-  const theme = useEditorStore((state)=>state.theme);
-  const roomId = useRoomStore((state)=> state.roomId);
-
   
+  const code = useEditorStore((state)=>state.code);
+  const theme = useEditorStore((state)=>state.theme);
+  
+  const { handleEditorMount, handleChange, editorRef } = useEditorSetup();
 
-  function handleEditorDidMount(editor, monaco) {
-    console.log("Editor instance:", editor);
-    console.log("Monaco instance:", monaco);
-  }
-
-
-  const emitCodeChange = throttle((code) => {
-    if(!roomId) return;
-    const socket = getSocket();
-    console.log(code);
-    
-    socket.emit("sendCodeChange", {
-      roomId,
-      code,
-    });
-  }, 100);
-
-  const handleChange = (value) => {
-    setCode(value);
-    emitCodeChange(value);
-  };
+  useCursorSync(editorRef);
 
   return (
     <div className="h-4/6">
@@ -44,7 +22,7 @@ const MonacoEditor = () => {
         language="javascript"
         value={code}
         theme={theme}
-        // onMount={handleEditorDidMount}
+        onMount={handleEditorMount}
         onChange={handleChange}
       />
     </div>
