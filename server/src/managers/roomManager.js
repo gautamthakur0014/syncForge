@@ -76,12 +76,17 @@ const getRoomMembers = (roomId) => {
   return rooms.get(roomId)?.members || [];
 };
 
+const getUser = (roomId, socketId) => {
+  console.log(rooms.get(roomId).members);
+  return rooms.get(roomId).members.filter((e) => e.socketId == socketId);
+};
+
 const getRoomState = (roomId) => {
   return rooms.get(roomId)?.state || null;
 };
 const updateRoomState = (roomId, updatedCode) => {
   rooms.get(roomId).state.code = updatedCode;
-}
+};
 
 module.exports = {
   addMember,
@@ -89,4 +94,5 @@ module.exports = {
   getRoomMembers,
   getRoomState,
   updateRoomState,
+  getUser,
 };

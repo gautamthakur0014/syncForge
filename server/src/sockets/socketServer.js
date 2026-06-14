@@ -1,6 +1,7 @@
 const socketIO = require('socket.io');
 const roomSocketHandler = require("./roomSocket");
 const codeSyncHandler = require('./codeSync');
+const cursorSyncHandler = require('./cursorSync');
 
 
 const initializeSocket = (server) => {
@@ -17,6 +18,7 @@ io.on("connection", (socket) => {
     
     roomSocketHandler(io,socket);
     codeSyncHandler(io, socket);
+    cursorSyncHandler(io,socket);
 });
 };
 
