@@ -4,14 +4,14 @@ export const createCursorDecoration = (position, userName) => {
   return [
     {
       range: new monaco.Range(
-        position.line,
+        position.lineNumber,
         position.column,
-        position.line,
+        position.lineNumber,
         position.column,
       ),
 
       options: {
-        className: "remote-cursor",
+        beforeContentClassName: "remote-cursor",
 
         hoverMessage: {
           value: userName,
