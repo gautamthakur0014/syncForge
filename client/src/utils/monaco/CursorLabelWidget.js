@@ -18,22 +18,24 @@ export default class CursorLabelWidget {
   }
 
   getId() {
+    console.log("getId");
     return this.id;
   }
 
   getDomNode() {
-      console.log("getDomNode");
+    console.log("getDomNode");
 
     return this.domNode;
   }
 
   getPosition() {
-      console.log(this.position);
+    console.log("this.position");
+    console.log(this.position);
 
     return {
       position: this.position,
 
-      preference: [monaco.editor.ContentWidgetPositionPreference.ABOVE],
+      preference: [monaco.editor.ContentWidgetPositionPreference.BELOW],
     };
   }
 
