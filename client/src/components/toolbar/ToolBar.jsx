@@ -19,7 +19,6 @@ const ToolBar = ({ fetchData }) => {
          username: usernameRef.current.value,
        };
 
-       console.log(data);
      };
 
 
