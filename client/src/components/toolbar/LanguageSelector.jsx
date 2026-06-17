@@ -3,7 +3,7 @@ import useEditorStore from '../../store/useEditorStore';
 
 const LanguageSelector = () => {
   const language = useEditorStore((state)=>state.language);
-  const setLanguage = useEditorStore((state)=>state.setLanguage);
+  const setLanguage = useEditorStore((state)=>state.actions.setLanguage);
   return (
     <div>
       <label htmlFor="language"></label>
