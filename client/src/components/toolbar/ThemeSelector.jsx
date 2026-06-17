@@ -3,7 +3,7 @@ import useEditorStore from '../../store/useEditorStore';
 
 const ThemeSelector = () => {
   const theme = useEditorStore((state)=>state.theme);
-  const setTheme = useEditorStore((state)=>state.setTheme)
+  const setTheme = useEditorStore((state)=>state.actions.setTheme)
   return (
     <div>
       <label htmlFor="theme"></label>
