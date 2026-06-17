@@ -11,10 +11,8 @@ router.post(
   "/",
   catchAsync(async (req, res) => {
     const { language, code } = req.body;
-    console.log(code);
     
-
-    if (language !== "javascript") {
+    if (language !== "javaScript") {
       return res.status(400).json({ error: "Only JS supported for now" });
     }
     const child = spawn("node", ["-e", code]);
