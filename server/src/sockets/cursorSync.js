@@ -11,6 +11,7 @@ const cursorSyncHandler = (io, socket) => {
     socket.to(roomId).emit("cursorUpdate", {
       // userId: member.userId,
       userName: user[0].userName,
+      userColor : user[0].userColor,
       position,
     });
   });
