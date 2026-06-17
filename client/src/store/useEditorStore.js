@@ -1,29 +1,59 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
+import { runAPI } from "../services/api";
 
 const useEditorStore = create(
   devtools(
     persist(
-      (set) => ({
+      (set, get) => ({
         code: "//start coding here",
-        language: "javascript",
+        language: "javaScript",
         theme: "dark",
-        output: "",
+        output: null,
         isRunning: false,
 
-        setCode: (newCode) => set({ code: newCode }, false, "editor/setCode"),
+        actions: {
+          setCode: (newCode) => set({ code: newCode }, false, "editor/setCode"),
 
-        setLanguage: (lang) =>
-          set({ language: lang }, false, "editor/setLanguage"),
+          setLanguage: (lang) =>
+            set({ language: lang }, false, "editor/setLanguage"),
 
-        setTheme: (newTheme) =>
-          set({ theme: newTheme }, false, "editor/setTheme"),
+          setTheme: (newTheme) =>
+            set({ theme: newTheme }, false, "editor/setTheme"),
 
-        setOutput: (result) =>
-          set({ output: result }, false, "editor/setOutput"),
+          setOutput: (result) =>
+            set({ output: result }, false, "editor/setOutput"),
 
-        setIsRunning: (status) =>
-          set({ isRunning: status }, false, "editor/setIsRunning"),
+          setIsRunning: (status) =>
+            set({ isRunning: status }, false, "editor/setIsRunning"),
+
+          runCode: async () => {
+            try {
+              set({ isRunning: true });
+
+              const { code, language } = get();
+
+              const res = await runAPI.run({
+                code,
+                language,
+              });
+
+              set({
+                output: res.data,
+              });
+            } catch (err) {
+              console.log(err);
+
+              set({
+                output: "Execution failed",
+              });
+            } finally {
+              set({
+                isRunning: false,
+              });
+            }
+          },
+        },
       }),
       {
         name: "editor-storage",
