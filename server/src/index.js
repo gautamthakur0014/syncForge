@@ -7,10 +7,14 @@ const cors = require("cors");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const morgan = require('morgan')
-const initializeSocket = require("./utils/socket");
+const initializeSocket = require("./sockets/socketServer");
 const logger = require("./config/logger");
 const errorHandler = require("./middleware/errorHandler");
 const {connectMongo, disconnectMongo} = require("./config/database")
+
+
+// Routes
+const executeRoute = require("./routes/execute");
 
 require("dotenv").config();
 
@@ -45,7 +49,7 @@ app.use(
 // GENERAL middleware
 
 app.use(compression());
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
 app.use(
   morgan("combined", { stream: { write: (msg) => logger.http(msg.trim()) } }),
@@ -53,6 +57,10 @@ app.use(
 
 const server = http.createServer(app);
 initializeSocket(server);
+
+// ─── API Routes ───────────────────────────────────────────────────────────────
+const API = '/api/v1';
+app.use(`${API}/execute`, executeRoute);
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
