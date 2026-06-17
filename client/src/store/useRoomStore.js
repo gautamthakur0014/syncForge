@@ -3,46 +3,50 @@ import { devtools, persist } from "zustand/middleware";
 
 const useRoomStore = create(
   devtools(
-    persist(
-      (set, get) => ({
-        userName: null,
-        roomId: null,
-        isInRoom: false,
-        users: [],
+    (set, get) => ({
+      userName: null,
+      roomId: null,
+      isInRoom: false,
+      users: [],
 
-        actions: {
-          setRoomId: (id) => set({ roomId: id, isInRoom: true }),
-          leaveRoom: () =>
-            set({
-              roomId: null,
-              isInRoom: false,
-              users: [],
-            }),
+      actions: {
+        setRoom: (roomId, userName) =>
+          set({
+            roomId: roomId,
+            userName: userName,
+            isInRoom: true,
+          }),
 
-          setUsers: (usersList) => set({ users: usersList }),
-          addUser: (username) =>
-            set((state) => ({
-              users: [...state.users, username],
-            })),
+        leaveRoom: () =>
+          set({
+            roomId: null,
+            isInRoom: false,
+            users: [],
+          }),
 
-          removeUser: (username) =>
-            set((state) => ({
-              users: state.users.filter((u) => u !== username),
-            })),
+        setUsers: (usersList) => set({ users: usersList }),
+        addUser: (username) =>
+          set((state) => ({
+            users: [...state.users, username],
+          })),
 
-          clearUsers: () => set({ users: [] }),
-        },
-      }),
-      {
-        name: "room-storage",
+        removeUser: (username) =>
+          set((state) => ({
+            users: state.users.filter((u) => u.userName !== username),
+          })),
 
-        partialize: (state) => ({
-          roomId: state.roomId,
-          userName: state.userName,
-          isInRoom: state.isInRoom,
-        }),
+        clearUsers: () => set({ users: [] }),
       },
-    ),
+    }),
+    // persist({
+    //   name: "room-storage",
+
+    //   partialize: (state) => ({
+    //     roomId: state.roomId,
+    //     userName: state.userName,
+    //     isInRoom: state.isInRoom,
+    //   }),
+    // }),
 
     {
       name: "RoomStore",
