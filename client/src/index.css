@@ -2,5 +2,12 @@
 
 
 .remote-cursor {
-  border-left: 2px solid #ef4444;
+  border-left: 1px solid #ef4444;
+   animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  50% {
+    opacity: 0;
+  }
 }
