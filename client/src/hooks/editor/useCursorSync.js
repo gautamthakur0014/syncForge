@@ -20,7 +20,7 @@ export default function useCursorSync(editorRef) {
       emitCursorMove({
         roomId,
         position: {
-          line: e.position.lineNumber,
+          lineNumber: e.position.lineNumber,
           column: e.position.column,
         },
       });
