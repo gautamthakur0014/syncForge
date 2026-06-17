@@ -1,3 +1,5 @@
+const getUserColor = require("../utils/getUserColor");
+
 const rooms = new Map();
 const MAX_ROOM_SIZE = 4;
 
@@ -23,6 +25,7 @@ const addMember = (roomId, member, roomState = null) => {
 
   const newMember = {
     ...member,
+    userColor : getUserColor(member.userName),
     role,
   };
 
