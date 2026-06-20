@@ -1,19 +1,21 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import Editor from "@monaco-editor/react";
 import useEditorStore from "../../store/useEditorStore";
 import useEditorSetup from "../../hooks/editor/useEditorSetup";
 import useCursorSync from "../../hooks/editor/useCursorSync";
 import useRemoteCursor from "../../hooks/socket/useRemoteCursor";
-
-
+import useYjsProvider from "../../hooks/yjs/useYjsProvider";
+import useMonacoBinding from "../../hooks/yjs/useMonacoBinding";
+import { createAwareness } from "../../yjs/awarenessManager";
 
 const MonacoEditor = () => {
-  
-  const code = useEditorStore((state)=>state.code);
-  const theme = useEditorStore((state)=>state.theme);
-  
-  const { handleEditorMount, handleChange, editorRef } = useEditorSetup();
+  const code = useEditorStore((state) => state.code);
+  const theme = useEditorStore((state) => state.theme);
 
+  const { handleEditorMount, editorRef } = useEditorSetup();
+  
+  useYjsProvider();
+  useMonacoBinding(editorRef);
   useCursorSync(editorRef);
   useRemoteCursor(editorRef);
 
@@ -22,10 +24,8 @@ const MonacoEditor = () => {
       <Editor
         height="100%"
         language="javascript"
-        value={code}
         theme={theme}
         onMount={handleEditorMount}
-        onChange={handleChange}
       />
     </div>
   );
