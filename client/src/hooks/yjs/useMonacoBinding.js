@@ -8,6 +8,11 @@ export default function useMonacoBinding(editorRef) {
   const awareness = useYjsStore((s) => s.awareness);
 
   useEffect(() => {
+     console.log({
+       editor: !!editorRef.current,
+       yText: !!yText,
+       awareness: !!awareness,
+     });
     if (!editorRef.current) return;
     if (!yText) return;
     if (!awareness) return;
