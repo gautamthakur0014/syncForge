@@ -12,10 +12,10 @@ const MonacoEditor = () => {
   const code = useEditorStore((state) => state.code);
   const theme = useEditorStore((state) => state.theme);
 
-  const { handleEditorMount, editorRef } = useEditorSetup();
+  const { handleEditorMount, editorRef,editor } = useEditorSetup();
   
-  useYjsProvider();
-  useMonacoBinding(editorRef);
+  // useYjsProvider();
+  useMonacoBinding(editor);
   useCursorSync(editorRef);
   useRemoteCursor(editorRef);
 
