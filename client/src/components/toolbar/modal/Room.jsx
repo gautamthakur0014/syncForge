@@ -4,6 +4,7 @@ import useRoomStore from "../../../store/useRoomStore";
 import { getSocket } from "../../../utils/socket";
 import { useStore } from "zustand";
 import useEditorStore from "../../../store/useEditorStore";
+import useYjsStore from "../../../store/useYjsStore";
 
 const Room = ({ type, onClose }) => {
   const setRoom = useRoomStore((state) => state.actions.setRoom);
@@ -24,12 +25,12 @@ const Room = ({ type, onClose }) => {
 
     setRoom(roomId, userName);
 
-    const socket = getSocket();
-    socket.emit("joinRoom", {
-      roomId,
-      userName,
-      state : {code, language, theme},
-    });
+    // const socket = getSocket();
+    // socket.emit("joinRoom", {
+    //   roomId,
+    //   userName,
+    //   state : {language, theme},
+    // });
     onClose();
   };
 
