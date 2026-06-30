@@ -9,7 +9,7 @@ export default function useEditorSetup() {
    const [editor, setEditor] = useState(null);
 
   const handleEditorMount = (editorInstance) => {
-    editorRef.current = editor;
+    editorRef.current = editorInstance;
     setEditor(editorInstance);
   };
 
