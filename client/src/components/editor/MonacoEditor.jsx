@@ -4,7 +4,6 @@ import useEditorStore from "../../store/useEditorStore";
 import useEditorSetup from "../../hooks/editor/useEditorSetup";
 import useCursorSync from "../../hooks/editor/useCursorSync";
 import useRemoteCursor from "../../hooks/socket/useRemoteCursor";
-import useYjsProvider from "../../hooks/yjs/useYjsProvider";
 import useMonacoBinding from "../../hooks/yjs/useMonacoBinding";
 import { createAwareness } from "../../yjs/awarenessManager";
 
