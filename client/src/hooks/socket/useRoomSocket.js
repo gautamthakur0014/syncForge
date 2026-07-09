@@ -27,18 +27,9 @@ export const useRoomSocket = () => {
     const handleRoomMembers = ({ members, roomState, ydocState }) => {
       if (!ydoc) return;
 
-      // console.log(members.map((e)=>(e.userName)));
-
-      // editorStore.actions.setCode(roomState.code);
-      // console.log("roomMembers");
-      // console.log("ydoc exists", !!ydoc);
-      // console.log("binding yText", ydoc.getText("editor").toString());
-      // console.log(ydocState);
-
       if (ydocState) {
         Y.applyUpdate(ydoc, new Uint8Array(ydocState), "origin");
       }
-      // console.log("after apply", ydoc.getText("editor").toString());
       editorStore.actions.setLanguage(roomState.language);
       editorStore.actions.setTheme(roomState.theme);
 

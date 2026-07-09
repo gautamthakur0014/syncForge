@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import useEditorStore from "../../store/useEditorStore";
-import { Socket } from "socket.io-client";
 import { getSocket } from "../../utils/socket";
 
 
@@ -10,7 +9,6 @@ export const useCodeSync = () => {
   useEffect(() => {
     const socket = getSocket();
     const handleCodeChange = ({ code }) => {
-        console.log(code);
         
       setCode(code);
     };

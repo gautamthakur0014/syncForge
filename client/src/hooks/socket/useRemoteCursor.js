@@ -30,8 +30,6 @@ const useRemoteCursor = (editorRef) => {
       let widget = widgetsRef.current.get(userName);
 
       if (!widget) {
-          console.log("creating widget");
-          console.log(position);
           
         widget = new CursorLabelWidget(editor, userName, userColor, position);
 
