@@ -4,13 +4,18 @@ import { getSocket } from "./utils/socket";
 import HomePage from './pages/HomePage';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Playground from './pages/Playground';
+import { useYjsInit } from './hooks/yjs/useYjsInit';
+import { useYjsRoomSync } from './hooks/yjs/useYjsRoomSync';
 
 function App() {
+
+  useYjsInit();
+  useYjsRoomSync();
   
 
 useEffect(()=>{
   const socket = getSocket();
-  if(!socket.conncted) socket.connect();
+  if(!socket.connected) socket.connect();
 
   return ()=>{
     socket.disconnect();

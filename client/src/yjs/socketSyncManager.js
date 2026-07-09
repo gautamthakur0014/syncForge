@@ -3,7 +3,15 @@
 import * as Y from "yjs";
 
 export const setupYjsSocketSync = ({ socket, roomId, ydoc }) => {
-  const updateHandler = (update) => {
+
+  const initialState = Array.from(Y.encodeStateAsUpdate(ydoc));
+  if (initialState.length > 2) {
+    // length > 2 means it has actual content
+    socket.emit("yjs-update", { roomId, update: initialState });
+  }
+  
+  const updateHandler = (update, origin) => {
+    if (origin === "remote") return;
     socket.emit("yjs-update", {
       roomId,
       update: Array.from(update),
@@ -17,6 +25,7 @@ export const setupYjsSocketSync = ({ socket, roomId, ydoc }) => {
   });
 
   return () => {
+
     ydoc.off("update", updateHandler);
     socket.off("yjs-update");
   };

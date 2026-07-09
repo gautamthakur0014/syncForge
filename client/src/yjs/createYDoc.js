@@ -7,6 +7,7 @@ export const createYDoc = () => {
   const ydoc = new Y.Doc();
   const yText = ydoc.getText("editor");
   yText.observe(() => {
+    
     useEditorStore.getState().actions.setCode(yText.toString());
   });
 

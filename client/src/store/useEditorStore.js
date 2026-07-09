@@ -13,7 +13,10 @@ const useEditorStore = create(
         isRunning: false,
 
         actions: {
-          setCode: (newCode) => set({ code: newCode }, false, "editor/setCode"),
+          setCode: (newCode) => {
+            
+            set({ code: newCode }, false, "editor/setCode")
+          },
 
           setLanguage: (lang) =>
             set({ language: lang }, false, "editor/setLanguage"),

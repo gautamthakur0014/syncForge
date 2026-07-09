@@ -9,10 +9,8 @@ export const useYjsInit = () => {
   const setYjs = useYjsStore((s) => s.actions.setYjs);
   const clearYjs = useYjsStore((s) => s.actions.clearYjs);
 
-  console.log("Creating Yjs");
 
   useEffect(() => {
-    console.log("running");
     
     const { ydoc, yText } = createYDoc();
 
