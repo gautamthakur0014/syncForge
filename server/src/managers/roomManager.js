@@ -1,3 +1,4 @@
+const Y = require("yjs");
 const getUserColor = require("../utils/getUserColor");
 
 const rooms = new Map();
@@ -9,9 +10,9 @@ const addMember = (roomId, member, roomState = null) => {
   if (!rooms.has(roomId)) {
     rooms.set(roomId, {
       members: [],
+      ydoc: new Y.Doc(),
       state: roomState || {
-        code: "",
-        lang: "javascript",
+        langauge: "javascript",
         theme: "vs-dark",
       },
     });
@@ -25,7 +26,7 @@ const addMember = (roomId, member, roomState = null) => {
 
   const newMember = {
     ...member,
-    userColor : getUserColor(member.userName),
+    userColor: getUserColor(member.userName),
     role,
   };
 
@@ -75,12 +76,15 @@ const removeMember = (socketId) => {
   return null;
 };
 
+const getRoom = (roomId) => {
+  return rooms.get(roomId);
+};
+
 const getRoomMembers = (roomId) => {
   return rooms.get(roomId)?.members || [];
 };
 
 const getUser = (roomId, socketId) => {
-  console.log(rooms.get(roomId).members);
   return rooms.get(roomId).members.filter((e) => e.socketId == socketId);
 };
 
@@ -91,6 +95,14 @@ const updateRoomState = (roomId, updatedCode) => {
   rooms.get(roomId).state.code = updatedCode;
 };
 
+const getYdocState = (roomId) => {
+  const room = rooms.get(roomId);
+
+  if (!room || !room.ydoc) return null;
+
+  return Array.from(Y.encodeStateAsUpdate(room.ydoc));
+};
+
 module.exports = {
   addMember,
   removeMember,
@@ -98,4 +110,6 @@ module.exports = {
   getRoomState,
   updateRoomState,
   getUser,
+  getRoom,
+  getYdocState,
 };

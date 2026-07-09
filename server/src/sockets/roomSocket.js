@@ -3,12 +3,17 @@ const {
   removeMember,
   getRoomMembers,
   getRoomState,
+  getYdocState,
+  getRoom,
 } = require("../managers/roomManager");
+
+const Y = require("yjs");
 
 const EVENTS = require("../constants/socketEvent");
 
+
 const roomSocketHandler = (io, socket) => {
-  socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName, state }) => {
+  socket.on(EVENTS.JOIN_ROOM, ({ roomId, userName, state, ydocStateVector }) => {
     
     const result = addMember(
       roomId,
@@ -33,8 +38,17 @@ const roomSocketHandler = (io, socket) => {
 
     // const members = getRoomMembers(roomId).map((e)=>e.userName);
     const members = getRoomMembers(roomId);
-    const roomState = getRoomState(roomId)
-    console.log(roomState);
+    const roomState = getRoomState(roomId);
+    const ydocState = getYdocState(roomId);
+    const room = getRoom(roomId);
+
+    if (ydocStateVector && room.ydoc) {
+      const missingUpdate = Y.encodeStateAsUpdate(
+        room.ydoc,
+        new Uint8Array(ydocStateVector),
+      );
+      // (server sends this back — already handled via ydocState in roomMembers)
+    }
 
     // send all members to everyone
     // io.to(roomId).emit(EVENTS.ROOM_MEMBERS, members);
@@ -43,6 +57,7 @@ const roomSocketHandler = (io, socket) => {
     socket.emit(EVENTS.ROOM_MEMBERS, {
       members,
       roomState,
+      ydocState,
     });
 
     // Send to everyone in the room except the current user
