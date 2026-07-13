@@ -11,6 +11,10 @@ export const useRoomSocket = () => {
   const ydoc = useYjsStore((s) => s.ydoc);
   const language = useEditorStore((s) => s.language);
   const theme = useEditorStore((s) => s.theme);
+  const input = useEditorStore((s) => s.input);
+  const setInput = useEditorStore((s)=> s.actions.setInput);
+  const output = useEditorStore((s)=> s.output);
+  const setOutput = useEditorStore((s) => s.actions.setOutput);
   const useName = useRoomStore((s) => s.userName);
 
   useEffect(() => {
@@ -20,7 +24,7 @@ export const useRoomSocket = () => {
     socket.emit("joinRoom", {
       roomId,
       userName,
-      state: { language, theme },
+      state: { language, theme, input, output },
       ydocStateVector: stateVector,
     });
 
@@ -32,6 +36,8 @@ export const useRoomSocket = () => {
       }
       editorStore.actions.setLanguage(roomState.language);
       editorStore.actions.setTheme(roomState.theme);
+      editorStore.actions.setInput(roomState.input);
+      editorStore.actions.setOutput(roomState.output);
 
       actions.setUsers(members || []);
     };

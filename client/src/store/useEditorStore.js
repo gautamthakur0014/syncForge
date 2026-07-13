@@ -7,7 +7,8 @@ const useEditorStore = create(
     persist(
       (set, get) => ({
         code: "//start coding here",
-        language: "javaScript",
+        input : null,
+        language: "javascript",
         theme: "dark",
         output: null,
         isRunning: false,
@@ -16,6 +17,10 @@ const useEditorStore = create(
           setCode: (newCode) => {
             
             set({ code: newCode }, false, "editor/setCode")
+          },
+          setInput: (newInput) => {
+            
+            set({ input : newInput }, false, "editor/setInput")
           },
 
           setLanguage: (lang) =>
@@ -34,11 +39,12 @@ const useEditorStore = create(
             try {
               set({ isRunning: true });
 
-              const { code, language } = get();
+              const { code, language, input } = get();
 
               const res = await runAPI.run({
                 code,
                 language,
+                input,
               });
 
               set({
