@@ -2,14 +2,14 @@
 
 const LanguageConfig = require("./LanguageConfig");
 const VolumeManager = require("./VolumeManager");
-const DockerManager = require("./DockerManager");
+const containerManager = require("./containerManager");
 
-async function runCode({ language, code, input = "" }) {
-  const config = LanguageConfig[language];
+async function runCode({image,filename, runCommand, code, input = "" }) {
 
-  if (!config) {
-    throw new Error(`Unsupported language: ${language}`);
-  }
+  console.log("IMAGE: ", image);
+  console.log("FILENAME: ", filename);
+  console.log("CODE : ", code);
+  console.log("COMMAND:", runCommand);
 
   let workspace;
   let container;
@@ -21,7 +21,7 @@ async function runCode({ language, code, input = "" }) {
     // Write source code
     await VolumeManager.writeCode(
       workspace.workspacePath,
-      config.filename,
+      filename,
       code,
     );
 
@@ -29,25 +29,26 @@ async function runCode({ language, code, input = "" }) {
     await VolumeManager.writeInput(workspace.workspacePath, input);
 
     // Create docker container
-    container = await DockerManager.createContainer({
-      image: config.image,
+    container = await containerManager.createContainer({
+      image: image,
       workspacePath: workspace.workspacePath,
-      runCommand: config.runCommand,
+      runCommand: runCommand,
     });
 
     // Start execution
-    await DockerManager.startContainer(container);
+    await containerManager.startContainer(container);
 
     // Wait until execution completes
-    const result = await DockerManager.waitContainer(container);
+    const result = await containerManager.waitContainer(container);
 
     // Read stdout/stderr
-    const output = await DockerManager.getLogs(container);
+    const logs = await containerManager.getLogs(container);
 
     return {
       success: result.StatusCode === 0,
       statusCode: result.StatusCode,
-      output,
+      output : logs.stdout,
+      error : logs.stderr,
     };
   } catch (err) {
     return {
@@ -58,7 +59,7 @@ async function runCode({ language, code, input = "" }) {
   } finally {
     // Remove container
     if (container) {
-      await DockerManager.removeContainer(container);
+      await containerManager.removeContainer(container);
     }
 
     // Delete temporary workspace
