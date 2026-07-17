@@ -19,6 +19,7 @@ const useRoomStore = create(
 
         leaveRoom: () =>
           set({
+            userName: null,
             roomId: null,
             isInRoom: false,
             users: [],
