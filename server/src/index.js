@@ -11,10 +11,14 @@ const initializeSocket = require("./sockets/socketServer");
 const logger = require("./config/logger");
 const errorHandler = require("./middleware/errorHandler");
 const {connectMongo, disconnectMongo} = require("./config/database")
+const ImageManager = require("./docker/ImageManager");
+const docker = require("./config/docker");
 
 
 // Routes
-const executeRoute = require("./routes/execute");
+// const executeRoute = require("./routes/execute");
+const executeRoute = require("./routes/codeExecutionRoute");
+
 
 require("dotenv").config();
 
@@ -56,7 +60,7 @@ app.use(
 );
 
 const server = http.createServer(app);
-initializeSocket(server);
+initializeSocket(server, app);
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 const API = '/api/v1';
@@ -78,6 +82,7 @@ const PORT = process.env.PORT || 5000;
 
 async function bootstrap() {
   try {
+    await ImageManager.initialize(docker);
     await connectMongo();
 
     server.listen(PORT, () => {

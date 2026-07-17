@@ -1,26 +1,25 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { runAPI } from "../services/api";
+import useRoomStore from "./useRoomStore";
 
 const useEditorStore = create(
   devtools(
     persist(
       (set, get) => ({
         code: "//start coding here",
-        input : null,
+        input: "",
         language: "javascript",
         theme: "dark",
-        output: null,
+        output: "",
         isRunning: false,
 
         actions: {
           setCode: (newCode) => {
-            
-            set({ code: newCode }, false, "editor/setCode")
+            set({ code: newCode }, false, "editor/setCode");
           },
           setInput: (newInput) => {
-            
-            set({ input : newInput }, false, "editor/setInput")
+            set({ input: newInput }, false, "editor/setInput");
           },
 
           setLanguage: (lang) =>
@@ -40,8 +39,10 @@ const useEditorStore = create(
               set({ isRunning: true });
 
               const { code, language, input } = get();
+              const roomId = useRoomStore.getState().roomId;
 
               const res = await runAPI.run({
+                roomId,
                 code,
                 language,
                 input,

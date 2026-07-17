@@ -103,6 +103,22 @@ const getYdocState = (roomId) => {
   return Array.from(Y.encodeStateAsUpdate(room.ydoc));
 };
 
+const updateOutput = (roomId, updatedOutput) => {
+  rooms.get(roomId).state.output = updatedOutput;
+};
+
+const updateInput = (roomId, updatedInput) => {
+  rooms.get(roomId).state.input = updatedInput;
+}
+
+const updateLanguage = (roomId, language) =>{
+  rooms.get(roomId).state.language = language;
+}
+
+const updateTheme = (roomId, theme) => {
+  rooms.get(roomId).state.theme = theme;
+}
+
 module.exports = {
   addMember,
   removeMember,
@@ -112,4 +128,8 @@ module.exports = {
   getUser,
   getRoom,
   getYdocState,
+  updateInput,
+  updateOutput,
+  updateLanguage,
+  updateTheme,
 };

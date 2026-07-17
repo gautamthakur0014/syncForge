@@ -3,9 +3,11 @@ import useEditorStore from "../store/useEditorStore";
 
 const Console = () => {
   const output = useEditorStore((state) => state.output);
+  console.log(output);
+  
 
   return (
-    <div className="h-2/6 p-2 overflow-y-scroll bg-black text-white">
+    <div className=" p-2 overflow-y-scroll bg-black text-white w-1/2">
       {output && (
         <>
           {output.success ? (
