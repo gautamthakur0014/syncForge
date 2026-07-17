@@ -3,6 +3,9 @@
 const { runCode } = require("../docker/CodeRunner");
 const ExecutionService = require("../execution/ExecutionService");
 const executionQueue = require("../execution/ExecutionQueue");
+const { updateOutput } = require("../managers/roomManager");
+const EVENTS = require("../constants/socketEvent");
+
 
 exports.executeCode = async (req, res) => {
   const { roomId, language, code, input = "" } = req.body;
@@ -10,7 +13,6 @@ exports.executeCode = async (req, res) => {
   console.log("language");
   console.log("imput");
   console.log(input);
-
 
   if (!language || !code) {
     return res.status(400).json({
@@ -32,8 +34,18 @@ exports.executeCode = async (req, res) => {
     console.log("result : ");
     console.log(result);
 
+    console.log(roomId, "used");
+    if (roomId) {
+      const io = req.app.get("io");
+      
 
-    
+      updateOutput(roomId, result);
+
+      io.to(roomId).emit(EVENTS.OUTPUT_UPDATE, result);
+      console.log("emmited");
+      
+    }
+
     return res.status(200).json(result);
   } catch (err) {
     console.error(err);

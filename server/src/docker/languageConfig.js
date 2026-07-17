@@ -2,13 +2,13 @@ const LanguageConfig = {
   javascript: {
     image: "node:20-alpine",
     filename: "main.js",
-    runCommand: ["node", "main.js < input.txt"],
+    runCommand: ["sh", "-c", "node main.js < input.txt"],
   },
 
   python: {
     image: "python:3.12-alpine",
     filename: "main.py",
-    runCommand: ["python", "main.py < input.txt"],
+    runCommand: ["sh", "-c", "python main.py < input.txt"],
   },
 
   cpp: {
