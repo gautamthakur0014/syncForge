@@ -25,12 +25,6 @@ const Room = ({ type, onClose }) => {
 
     setRoom(roomId, userName);
 
-    // const socket = getSocket();
-    // socket.emit("joinRoom", {
-    //   roomId,
-    //   userName,
-    //   state : {language, theme},
-    // });
     onClose();
   };
 

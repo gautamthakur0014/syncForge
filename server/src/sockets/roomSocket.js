@@ -66,17 +66,7 @@ const roomSocketHandler = (io, socket) => {
     });
   });
 
-  socket.on("disconnect", () => {
-    const removed = removeMember(socket.id);
-
-    if (!removed) return;
-
-    // io.to(removed.roomId).emit(EVENTS.ROOM_MEMBERS, removed);
-
-    io.to(removed.roomId).emit(EVENTS.USER_LEFT, {
-      leavedUserName: removed.removedMember.userName,
-    });
-  });
+  
 };
 
 module.exports = roomSocketHandler;

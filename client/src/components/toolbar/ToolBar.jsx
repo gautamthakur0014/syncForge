@@ -4,29 +4,19 @@ import LanguageSelector from "./LanguageSelector";
 import RoomDropdown from "./RoomDropdown";
 import RoomMembers from "./RoomMembers";
 import ThemeSelector from "./ThemeSelector";
+import useRoomStore from "../../store/useRoomStore";
+import RoomLeave from "./RoomLeave";
 
-const ToolBar = ({ fetchData }) => {
-    const roomIdRef = useRef(null);
-    const usernameRef = useRef(null);
-     const [theme, setTheme] = useState("light");
+const ToolBar = () => {
 
-     const handleSubmit = (e) => {
-       e.preventDefault();
-
-       const data = {
-         theme,
-         roomId: roomIdRef.current.value,
-         username: usernameRef.current.value,
-       };
-
-     };
+    const isInRoom = useRoomStore((s)=> s.isInRoom);
 
 
   return (
     <div className="flex justify-evenly items-center">
       <ExecuteCode/>
       <LanguageSelector/>
-      <RoomDropdown/>
+      {isInRoom?(<RoomLeave/>) : <RoomDropdown/>}
       <RoomMembers/>
       <ThemeSelector/>
     </div>
