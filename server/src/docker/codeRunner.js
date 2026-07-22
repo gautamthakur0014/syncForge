@@ -3,9 +3,9 @@
 const LanguageConfig = require("./LanguageConfig");
 const VolumeManager = require("./VolumeManager");
 const containerManager = require("./containerManager");
+const LogCollector = require("./logCollector");
 
-async function runCode({image,filename, runCommand, code, input = "" }) {
-
+async function runCode({ image, filename, runCommand, code, input = "" }) {
   console.log("IMAGE: ", image);
   console.log("FILENAME: ", filename);
   console.log("CODE : ", code);
@@ -19,11 +19,7 @@ async function runCode({image,filename, runCommand, code, input = "" }) {
     workspace = await VolumeManager.createWorkspace();
 
     // Write source code
-    await VolumeManager.writeCode(
-      workspace.workspacePath,
-      filename,
-      code,
-    );
+    await VolumeManager.writeCode(workspace.workspacePath, filename, code);
 
     // Write stdin input
     await VolumeManager.writeInput(workspace.workspacePath, input);
@@ -35,20 +31,42 @@ async function runCode({image,filename, runCommand, code, input = "" }) {
       runCommand: runCommand,
     });
 
+    const logPromise = LogCollector.collect(container);
+
     // Start execution
     await containerManager.startContainer(container);
 
     // Wait until execution completes
     const result = await containerManager.waitContainer(container);
 
-    // Read stdout/stderr
-    const logs = await containerManager.getLogs(container);
+    console.log(result);
+
+    // Wait for logs to finish streaming
+    const logs = await logPromise;
+
+    // Output limit exceeded
+    if (logs.killedByOutputLimit) {
+      return {
+        success: false,
+        statusCode: -2,
+        output: "",
+        error: "Output limit exceeded.",
+      };
+    }
+
+    if (result.timedOut) {
+      return {
+        success: false,
+        statusCode: -3,
+        error: "Time limit exceeded.",
+      };
+    }
 
     return {
       success: result.StatusCode === 0,
       statusCode: result.StatusCode,
-      output : logs.stdout,
-      error : logs.stderr,
+      output: logs.stdout,
+      error: logs.stderr,
     };
   } catch (err) {
     return {
@@ -66,7 +84,6 @@ async function runCode({image,filename, runCommand, code, input = "" }) {
     if (workspace) {
       await VolumeManager.deleteWorkspace(workspace.workspacePath);
       console.log("vol deleted");
-      
     }
   }
 }
