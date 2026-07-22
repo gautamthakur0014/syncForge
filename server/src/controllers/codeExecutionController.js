@@ -8,6 +8,8 @@ const EVENTS = require("../constants/socketEvent");
 
 
 exports.executeCode = async (req, res) => {
+  const MAX_CODE_SIZE = 10 * 1024; // 10 KB
+  const MAX_INPUT_SIZE = 5 * 1024; // 5 KB
   const { roomId, language, code, input = "" } = req.body;
   console.log(language);
   console.log("language");
@@ -19,6 +21,20 @@ exports.executeCode = async (req, res) => {
       success: false,
       output: null,
       error: "language and code are required",
+    });
+  }
+
+  if (code.length > MAX_CODE_SIZE) {
+    return res.status(400).json({
+      success: false,
+      message: "Code exceeds 100 KB limit.",
+    });
+  }
+
+  if (input.length > MAX_INPUT_SIZE) {
+    return res.status(400).json({
+      success: false,
+      message: "Input exceeds 20 KB limit.",
     });
   }
 
@@ -37,13 +53,11 @@ exports.executeCode = async (req, res) => {
     console.log(roomId, "used");
     if (roomId) {
       const io = req.app.get("io");
-      
 
       updateOutput(roomId, result);
 
       io.to(roomId).emit(EVENTS.OUTPUT_UPDATE, result);
       console.log("emmited");
-      
     }
 
     return res.status(200).json(result);

@@ -13,6 +13,7 @@ const errorHandler = require("./middleware/errorHandler");
 const {connectMongo, disconnectMongo} = require("./config/database")
 const ImageManager = require("./docker/ImageManager");
 const docker = require("./config/docker");
+const {executeLimiter} = require("./middleware/rateLimiter");
 
 
 // Routes
@@ -53,7 +54,7 @@ app.use(
 // GENERAL middleware
 
 app.use(compression());
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: "50KB" }));
 app.use(cookieParser());
 app.use(
   morgan("combined", { stream: { write: (msg) => logger.http(msg.trim()) } }),
@@ -64,7 +65,7 @@ initializeSocket(server, app);
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 const API = '/api/v1';
-app.use(`${API}/execute`, executeRoute);
+app.use(`${API}/execute`, executeLimiter ,executeRoute);
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use((req, res) => {
