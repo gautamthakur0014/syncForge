@@ -55,7 +55,10 @@ class containerManager {
   }
 
   static async waitContainer(container, timeoutMs = 5000) {
+    let timedOut = false;
+
     const timeout = setTimeout(async () => {
+        timedOut = true;
       try {
         console.warn(`Container timed out after ${timeoutMs}ms`);
         await container.kill();
@@ -68,47 +71,52 @@ class containerManager {
     }, timeoutMs);
 
     try {
-      return await container.wait();
+      const result = await container.wait();
+
+      return {
+        ...result,
+        timedOut,
+      };
     } finally {
       clearTimeout(timeout);
     }
   }
 
-  static async getLogs(container) {
-    const stream = await container.logs({
-      stdout: true,
-      stderr: true,
-      follow: false,
-    });
+  // static async getLogs(container) {
+  //   const stream = await container.logs({
+  //     stdout: true,
+  //     stderr: true,
+  //     follow: false,
+  //   });
 
-    let offset = 0;
-    let stdout = "";
-    let stderr = "";
+  //   let offset = 0;
+  //   let stdout = "";
+  //   let stderr = "";
 
-     while (offset < stream.length) {
-       const streamType = stream[offset];
+  //    while (offset < stream.length) {
+  //      const streamType = stream[offset];
 
-       // Docker header = 8 bytes
-       const size = stream.readUInt32BE(offset + 4);
+  //      // Docker header = 8 bytes
+  //      const size = stream.readUInt32BE(offset + 4);
 
-       const start = offset + 8;
-       const end = start + size;
+  //      const start = offset + 8;
+  //      const end = start + size;
 
-       const data = stream.subarray(start, end).toString("utf8");
+  //      const data = stream.subarray(start, end).toString("utf8");
 
-       if (streamType === 1) {
-         stdout += data;
-       } else if (streamType === 2) {
-         stderr += data;
-       }
+  //      if (streamType === 1) {
+  //        stdout += data;
+  //      } else if (streamType === 2) {
+  //        stderr += data;
+  //      }
 
-       offset = end;
-     }
-    return {
-      stdout,
-      stderr,
-    };
-  }
+  //      offset = end;
+  //    }
+  //   return {
+  //     stdout,
+  //     stderr,
+  //   };
+  // }
 
   static async stopContainer(container) {
     try {
