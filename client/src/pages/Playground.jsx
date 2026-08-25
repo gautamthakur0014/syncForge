@@ -14,10 +14,12 @@ const Playground = () => {
   useEditorSettingsSync();
 
   return (
-    <div className="p-1 m-0 h-screen">
+    <div className="flex h-screen flex-col bg-surface-900">
       <ToolBar />
-      <MonacoEditor />
-      <div className="flex h-2/6">
+      <div className="h-3/5 min-h-0 sm:h-2/3">
+        <MonacoEditor />
+      </div>
+      <div className="flex h-2/5 min-h-0 flex-col sm:h-1/3 sm:flex-row">
         <Console />
         <StdIn />
       </div>

@@ -10,6 +10,9 @@ import { createAwareness } from "../../yjs/awarenessManager";
 const MonacoEditor = () => {
   const code = useEditorStore((state) => state.code);
   const theme = useEditorStore((state) => state.theme);
+  const language = useEditorStore((s)=>s.language);
+  console.log(language);
+  
 
   const { handleEditorMount, editorRef,editor } = useEditorSetup();
   
@@ -19,12 +22,19 @@ const MonacoEditor = () => {
   useRemoteCursor(editorRef);
 
   return (
-    <div className="h-4/6">
+    <div className="h-full">
       <Editor
         height="100%"
-        language="javascript"
+        language={language}
         theme={theme}
         onMount={handleEditorMount}
+        options={{
+          fontSize: 14,
+          fontFamily: "'JetBrains Mono', monospace",
+          minimap: { enabled: false },
+          padding: { top: 12 },
+          smoothScrolling: true,
+        }}
       />
     </div>
   );

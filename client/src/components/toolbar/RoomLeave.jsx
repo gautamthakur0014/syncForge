@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import useRoomStore from "../../store/useRoomStore";
+import { LogOut } from "lucide-react";
 import { getSocket } from "../../utils/socket";
 
 const RoomLeave = () => {
@@ -20,7 +21,15 @@ const RoomLeave = () => {
     // navigate("/");
   };
 
-  return <button onClick={handleLeave}>Leave Room</button>;
+  return (
+    <button
+      onClick={handleLeave}
+      className="flex items-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-3.5 py-1.5 text-sm font-medium text-red-400 transition hover:bg-red-500/20"
+    >
+      <LogOut size={15} />
+      Leave Room
+    </button>
+  );
 };
 
 export default RoomLeave;

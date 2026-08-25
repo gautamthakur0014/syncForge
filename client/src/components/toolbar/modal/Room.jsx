@@ -56,16 +56,16 @@ const Room = ({ type, onClose }) => {
   if (!type) return null;
 
   return (
-    <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+    <div className="fixed inset-0 z-999 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-surface-600 bg-surface-800 p-6 shadow-2xl shadow-black/50 scrollbar-thin">
         {/* Header */}
         <div className="mb-6 flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-slate-800">
+            <h2 className="font-display text-2xl font-bold text-white">
               {type === "create" ? "Create Room" : "Join Room"}
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 text-sm text-slate-400">
               {type === "create"
                 ? "Create and share your room"
                 : "Join using a room ID"}
@@ -74,7 +74,7 @@ const Room = ({ type, onClose }) => {
 
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100"
+            className="rounded-lg p-2 text-slate-400 transition hover:bg-surface-700 hover:text-white"
           >
             <X size={18} />
           </button>
@@ -86,7 +86,7 @@ const Room = ({ type, onClose }) => {
             <form onSubmit={handleSubmit}>
               {/* Room ID */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
+                <label className="mb-2 block text-sm font-medium text-slate-300">
                   Room ID
                 </label>
 
@@ -95,13 +95,13 @@ const Room = ({ type, onClose }) => {
                     type="text"
                     value={roomId}
                     readOnly
-                    className="flex-1 rounded-xl border border-slate-300 bg-slate-100 px-4 py-3 text-sm font-medium text-slate-700 outline-none"
+                    className="flex-1 rounded-xl border border-surface-600 bg-surface-700 px-4 py-3 font-mono text-sm font-medium text-slate-200 outline-none"
                   />
 
                   <button
                     type="button"
                     onClick={handleCopy}
-                    className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 text-white transition hover:bg-slate-700"
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white transition hover:bg-brand-600"
                   >
                     {copied ? <Check size={18} /> : <Copy size={18} />}
                   </button>
@@ -109,10 +109,10 @@ const Room = ({ type, onClose }) => {
               </div>
 
               {/* Room Name */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
+              <div className="mt-5">
+                <label className="mb-2 block text-sm font-medium text-slate-300">
                   Room Name
-                  <span className="ml-1 text-slate-400">(Optional)</span>
+                  <span className="ml-1 text-slate-500">(Optional)</span>
                 </label>
 
                 <input
@@ -120,13 +120,13 @@ const Room = ({ type, onClose }) => {
                   placeholder="Enter room name"
                   value={roomName}
                   onChange={(e) => setRoomName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-900"
+                  className="w-full rounded-xl border border-surface-600 bg-surface-900 px-4 py-3 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-brand-500"
                 />
               </div>
 
               {/* Name */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
+              <div className="mt-5">
+                <label className="mb-2 block text-sm font-medium text-slate-300">
                   Your Name
                 </label>
 
@@ -137,13 +137,13 @@ const Room = ({ type, onClose }) => {
                   placeholder="Enter your name"
                   value={uName}
                   onChange={(e) => setUName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-900"
+                  className="w-full rounded-xl border border-surface-600 bg-surface-900 px-4 py-3 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-brand-500"
                 />
               </div>
 
               {/* Action */}
               <button
-                className="w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+                className="mt-6 w-full rounded-xl bg-brand-500 py-3 text-sm font-semibold text-white transition hover:bg-brand-600"
                 type="submit"
               >
                 Create Room
@@ -158,7 +158,7 @@ const Room = ({ type, onClose }) => {
             <form onSubmit={handleSubmit}>
               {/* Room ID */}
               <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
+                <label className="mb-2 block text-sm font-medium text-slate-300">
                   Room ID
                 </label>
 
@@ -169,13 +169,13 @@ const Room = ({ type, onClose }) => {
                   required
                   autoFocus
                   onChange={(e) => setRoomId(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-900"
+                  className="w-full rounded-xl border border-surface-600 bg-surface-900 px-4 py-3 font-mono text-sm text-slate-200 outline-none transition placeholder:font-sans placeholder:text-slate-500 focus:border-brand-500"
                 />
               </div>
 
               {/* Name */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-slate-700">
+              <div className="mt-5">
+                <label className="mb-2 block text-sm font-medium text-slate-300">
                   Your Name
                 </label>
 
@@ -185,13 +185,13 @@ const Room = ({ type, onClose }) => {
                   placeholder="Enter your name"
                   value={uName}
                   onChange={(e) => setUName(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-900"
+                  className="w-full rounded-xl border border-surface-600 bg-surface-900 px-4 py-3 text-sm text-slate-200 outline-none transition placeholder:text-slate-500 focus:border-brand-500"
                 />
               </div>
 
               {/* Action */}
               <button
-                className="w-full rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+                className="mt-6 w-full rounded-xl bg-brand-500 py-3 text-sm font-semibold text-white transition hover:bg-brand-600"
                 type="submit"
               >
                 Join Room
